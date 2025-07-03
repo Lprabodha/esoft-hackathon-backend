@@ -1,10 +1,11 @@
+# cognitive_navigator_backend/routers/auth.py
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from datetime import timedelta
 
 from database.connection import get_db
 from database import models
-from schemas import auth as auth_schemas, user as user_schemas, oauth2_scheme
+from schemas import auth as auth_schemas, user as user_schemas, oauth2_scheme # Keep oauth2_scheme for now, though not used for auth
 from utils.security import get_password_hash, verify_password, create_access_token, ACCESS_TOKEN_EXPIRE_MINUTES
 
 router = APIRouter()
@@ -70,27 +71,28 @@ def login_for_access_token(user_data: auth_schemas.UserLogin, db: Session = Depe
     )
     return {"access_token": access_token, "token_type": "bearer"}
 
-# Dependency to get current user (for protected routes)
-def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)): # Use oauth2_scheme directly
-    credentials_exception = HTTPException(
-        status_code=status.HTTP_401_UNAUTHORIZED,
-        detail="Could not validate credentials",
-        headers={"WWW-Authenticate": "Bearer"},
-    )
-    payload = auth_schemas.decode_access_token(token) # auth_schemas is still needed for decode_access_token
-    if payload is None:
-        raise credentials_exception
-    email: str = payload.get("sub")
-    user_id: int = payload.get("user_id")
-    if email is None or user_id is None:
-        raise credentials_exception
-    token_data = auth_schemas.TokenData(email=email)
-    user = db.query(models.User).filter(models.User.id == user_id).first()
-    if user is None:
-        raise credentials_exception
-    return user
+# --- TEMPORARY: Dummy get_current_user for hackathon to disable authentication ---
+# In a real app, this would validate the JWT token.
+def get_current_user(db: Session = Depends(get_db)):
+    """
+    TEMPORARY: This function bypasses actual JWT validation for hackathon purposes.
+    It returns the first student user found, or raises an error if no student exists.
+    """
+    # Find the first user with the 'student' role
+    student_role = db.query(models.Role).filter(models.Role.name == "student").first()
+    if not student_role:
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="No 'student' role found in DB. Please register at least one student user.")
 
-# This is a placeholder for `oauth2_scheme` that should be defined in schemas/auth.py
-# Add this to schemas/auth.py:
-# from fastapi.security import OAuth2PasswordBearer
-# oauth2_scheme = OAuth2PasswordBearer(tokenUrl="api/auth/token")
+    # Find a user associated with the student role
+    user_role_entry = db.query(models.UserRole).filter(models.UserRole.role_id == student_role.id).first()
+    if not user_role_entry:
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="No student users found. Please register at least one student.")
+
+    user = db.query(models.User).filter(models.User.id == user_role_entry.user_id).first()
+    if not user:
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Student user not found after role lookup.")
+
+    # Load roles for the dummy user if needed by other functions
+    user.roles # Accessing the relationship to load it
+
+    return user
