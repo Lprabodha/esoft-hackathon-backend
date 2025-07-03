@@ -155,14 +155,16 @@ async def generate_cv_pdf(
 
     # Convert HTML to PDF
     try:
-        # Use a BytesIO buffer to hold the PDF content in memory
-        pdf_output = io.BytesIO()
-        pdfkit.from_string(html_content, pdf_output, configuration=pdfkit_config, options={'enable-local-file-access': None})
+        # Convert HTML to PDF. Pass False as the output argument to get bytes directly.
+        pdf_bytes = pdfkit.from_string(html_content, False, configuration=pdfkit_config, options={'enable-local-file-access': None})
+        
+        # Create a BytesIO buffer from the returned bytes
+        pdf_output = io.BytesIO(pdf_bytes)
         pdf_output.seek(0) # Rewind the buffer to the beginning
 
         filename = f"{cv_data_for_template.name.replace(' ', '_')}_CV.pdf"
         
-        # Return as StreamingResponse to avoid saving to disk unnecessarily
+        # Return as StreamingResponse
         return StreamingResponse(pdf_output, media_type="application/pdf", headers={
             "Content-Disposition": f"attachment; filename={filename}"
         })
