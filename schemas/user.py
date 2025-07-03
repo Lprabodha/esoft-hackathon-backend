@@ -16,4 +16,4 @@ class UserInDB(UserBase):
     updated_at: datetime.datetime
 
     class Config:
-        orm_mode = True # Enable ORM mode for Pydantic
+        from_attributes = True # Enable ORM mode for Pydantic

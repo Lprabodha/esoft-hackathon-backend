@@ -4,7 +4,7 @@ from datetime import timedelta
 
 from database.connection import get_db
 from database import models
-from schemas import auth as auth_schemas, user as user_schemas
+from schemas import auth as auth_schemas, user as user_schemas, oauth2_scheme
 from utils.security import get_password_hash, verify_password, create_access_token, ACCESS_TOKEN_EXPIRE_MINUTES
 
 router = APIRouter()
@@ -71,13 +71,13 @@ def login_for_access_token(user_data: auth_schemas.UserLogin, db: Session = Depe
     return {"access_token": access_token, "token_type": "bearer"}
 
 # Dependency to get current user (for protected routes)
-def get_current_user(token: str = Depends(auth_schemas.oauth2_scheme), db: Session = Depends(get_db)):
+def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)): # Use oauth2_scheme directly
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="Could not validate credentials",
         headers={"WWW-Authenticate": "Bearer"},
     )
-    payload = auth_schemas.decode_access_token(token)
+    payload = auth_schemas.decode_access_token(token) # auth_schemas is still needed for decode_access_token
     if payload is None:
         raise credentials_exception
     email: str = payload.get("sub")

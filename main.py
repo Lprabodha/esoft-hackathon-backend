@@ -12,7 +12,11 @@ from database.connection import engine, Base, get_db
 from database import models
 
 # Import routers
-from routers import auth, users, students, opportunities, recommendations
+from routers.auth import router as auth_router
+from routers.users import router as users_router
+from routers.students import router as students_router
+from routers.opportunities import router as opportunities_router
+from routers.recommendations import router as recommendations_router
 
 # Create tables if they don't exist (for development/hackathon convenience)
 # In production, you'd typically use Alembic for migrations.
@@ -41,11 +45,11 @@ app.add_middleware(
 )
 
 # Include routers
-app.include_router(auth.router, prefix="/api/auth", tags=["Authentication"])
-app.include_router(users.router, prefix="/api/users", tags=["Users"])
-app.include_router(students.router, prefix="/api/students", tags=["Students"])
-app.include_router(opportunities.router, prefix="/api/opportunities", tags=["Opportunities"])
-app.include_router(recommendations.router, prefix="/api/recommendations", tags=["Recommendations"])
+app.include_router(auth_router, prefix="/api/auth", tags=["Authentication"])
+app.include_router(users_router, prefix="/api/users", tags=["Users"])
+app.include_router(students_router, prefix="/api/students", tags=["Students"])
+app.include_router(opportunities_router, prefix="/api/opportunities", tags=["Opportunities"])
+app.include_router(recommendations_router, prefix="/api/recommendations", tags=["Recommendations"])
 
 
 @app.get("/")

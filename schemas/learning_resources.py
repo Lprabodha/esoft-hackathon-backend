@@ -20,4 +20,4 @@ class LearningResourceResponse(LearningResourceBase):
     associated_skills: List[SkillResponse] = [] # List of associated skills
 
     class Config:
-        orm_mode = True
+        from_attributes = True

@@ -1,7 +1,7 @@
 from pydantic import BaseModel
 from typing import Optional, List
 from schemas.opportunity import OpportunityResponse
-from schemas.learning_resource import LearningResourceResponse
+from schemas.learning_resources import LearningResourceResponse
 from schemas.skill import SkillResponse
 
 class RecommendedOpportunity(BaseModel):

@@ -12,7 +12,7 @@ class SkillCreate(SkillBase):
 class SkillResponse(SkillBase):
     id: int
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 class StudentSkillBase(BaseModel):
     skill_id: int
@@ -25,7 +25,7 @@ class StudentSkillCreate(StudentSkillBase):
 class StudentSkillResponse(StudentSkillBase):
     skill: SkillResponse # Nested skill details
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 class OpportunityRequiredSkillBase(BaseModel):
     skill_id: int
@@ -37,4 +37,4 @@ class OpportunityRequiredSkillCreate(OpportunityRequiredSkillBase):
 class OpportunityRequiredSkillResponse(OpportunityRequiredSkillBase):
     skill: SkillResponse # Nested skill details
     class Config:
-        orm_mode = True
+        from_attributes = True

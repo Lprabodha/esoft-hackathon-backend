@@ -23,4 +23,4 @@ class StudentProfileResponse(StudentProfileBase):
     skills: List[StudentSkillResponse] = [] # Nested student skills
 
     class Config:
-        orm_mode = True
+        from_attributes = True

@@ -5,6 +5,7 @@ from database import models
 from schemas import student as student_schemas, skill as skill_schemas
 from routers.auth import get_current_user # Import the dependency
 from services.nlp_service import extract_skills_from_text # Import NLP service
+from typing import List, Optional
 
 router = APIRouter()
 
