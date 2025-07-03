@@ -1,0 +1,46 @@
+# Python
+__pycache__/
+*.pyc
+*.pyd
+*.pyo
+.Python
+env/
+venv/
+*.egg-info/
+.pytest_cache/
+.coverage
+.mypy_cache/
+.ruff_cache/
+
+# Environment variables
+.env
+.flaskenv
+
+# IDEs and Editors
+.vscode/        # VS Code
+.idea/          # PyCharm/IntelliJ IDEA
+*.sublime-project
+*.sublime-workspace
+*.DS_Store      # macOS specific
+
+# Operating System Files
+Thumbs.db       # Windows
+ehthumbs.db     # Windows
+
+# Build artifacts
+dist/
+build/
+*.egg
+
+# Spacy models/data (if they create local directories)
+# Depending on where spacy downloads models, you might want to ignore these.
+# Common locations are user home directories or project-specific caches.
+# If you run `python -m spacy download en_core_web_sm` it usually puts it in a system-wide location.
+# But if you have a custom spacy pipeline or data, add it here.
+# For example, if you create a 'spacy_data' directory for custom models:
+# spacy_data/
+
+# Logs and temporary files
+*.log
+*.tmp
+*.bak
