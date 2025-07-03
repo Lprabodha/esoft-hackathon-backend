@@ -18,6 +18,7 @@ from routers.students import router as students_router
 from routers.opportunities import router as opportunities_router
 from routers.recommendations import router as recommendations_router
 from routers.pdf_generator import router as pdf_generator_router
+from routers.faculty_orgs import router as faculty_orgs_router
 
 # Create tables if they don't exist (for development/hackathon convenience)
 # In production, you'd typically use Alembic for migrations.
@@ -52,6 +53,7 @@ app.include_router(students_router, prefix="/api/students", tags=["Students"])
 app.include_router(opportunities_router, prefix="/api/opportunities", tags=["Opportunities"])
 app.include_router(recommendations_router, prefix="/api/recommendations", tags=["Recommendations"])
 app.include_router(pdf_generator_router, prefix="/api/pdf", tags=["PDF Generation"])
+app.include_router(faculty_orgs_router, prefix="/api/faculty-org-profiles", tags=["Faculty/Organization Profiles"])
 
 
 @app.get("/")

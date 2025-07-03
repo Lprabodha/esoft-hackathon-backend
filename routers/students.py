@@ -3,8 +3,8 @@ from sqlalchemy.orm import Session, joinedload
 from database.connection import get_db
 from database import models
 from schemas import student as student_schemas, skill as skill_schemas
-from routers.auth import get_current_user # Import the dependency
-from services.nlp_service import extract_skills_from_text # Import NLP service
+from routers.auth import get_current_user
+from services.nlp_service import extract_skills_from_text
 from typing import List, Optional
 
 router = APIRouter()
@@ -138,4 +138,12 @@ def delete_student_profile(
     db.commit()
     return None
 
-# You can add endpoints for managing applications, learning paths here too
+@router.post("/profiles/{user_id}/extract-skills", response_model=List[skill_schemas.StudentSkillResponse])
+def extract_and_add_skills_to_profile(
+    user_id: int,
+    text_to_analyze: str, # This is the input text
+    db: Session = Depends(get_db),
+):
+    # ...
+    extracted_skill_names = [s['name'] for s in extract_skills_from_text(text_to_analyze)] # <--- Here it's used!
+    # ... then these skills are added to the student's profile in the DB
