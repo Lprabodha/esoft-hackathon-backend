@@ -7,3 +7,5 @@ passlib[bcrypt]
 python-jose[cryptography]
 spacy
 pydantic[email]
+jinja2
+pdfkit

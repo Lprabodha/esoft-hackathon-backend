@@ -17,13 +17,14 @@ from routers.users import router as users_router
 from routers.students import router as students_router
 from routers.opportunities import router as opportunities_router
 from routers.recommendations import router as recommendations_router
+from routers.pdf_generator import router as pdf_generator_router
 
 # Create tables if they don't exist (for development/hackathon convenience)
 # In production, you'd typically use Alembic for migrations.
 # Base.metadata.create_all(bind=engine) # This line will be used by create_db_schema.py
 
 app = FastAPI(
-    title="Cognitive Navigator Backend",
+    title="Smart Platform for Academic and Professional Growth",
     description="API for the Private University Talent Connect Platform with AI-powered recommendations.",
     version="1.0.0",
 )
@@ -50,11 +51,12 @@ app.include_router(users_router, prefix="/api/users", tags=["Users"])
 app.include_router(students_router, prefix="/api/students", tags=["Students"])
 app.include_router(opportunities_router, prefix="/api/opportunities", tags=["Opportunities"])
 app.include_router(recommendations_router, prefix="/api/recommendations", tags=["Recommendations"])
+app.include_router(pdf_generator_router, prefix="/api/pdf", tags=["PDF Generation"])
 
 
 @app.get("/")
 def read_root():
-    return {"message": "Welcome to the Cognitive Navigator API!"}
+    return {"message": "Smart Platform for Academic and Professional Growth API!"}
 
 # Example of a simple health check endpoint
 @app.get("/health")
