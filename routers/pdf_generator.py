@@ -29,9 +29,9 @@ jinja_env = Environment(
 # For Linux/macOS, if wkhtmltopdf is in PATH, you might not need to specify the path.
 # Example for Windows: r"C:\Program Files\wkhtmltopdf\bin\wkhtmltopdf.exe"
 # Example for Linux/macOS (if not in PATH): "/usr/local/bin/wkhtmltopdf"
-WKHTMLTOPDF_PATH = os.getenv("WKHTMLTOPDF_PATH", "/usr/local/bin/wkhtmltopdf") # Default for common Linux/macOS
+# WKHTMLTOPDF_PATH = os.getenv("WKHTMLTOPDF_PATH", "/usr/local/bin/wkhtmltopdf") # Default for common Linux/macOS
+WKHTMLTOPDF_PATH = r"C:\Program Files\wkhtmltopdf\bin\wkhtmltopdf.exe"
 pdfkit_config = pdfkit.configuration(wkhtmltopdf=WKHTMLTOPDF_PATH)
-
 # --- Pydantic Schema for CV Data (Matches your sample data structure) ---
 class ExperienceItem(BaseModel):
     role: str

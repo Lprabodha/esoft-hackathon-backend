@@ -24,7 +24,7 @@ def read_my_student_profile(current_user: models.User = Depends(get_current_user
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Student profile not found.")
     return student_profile
 
-@router.post("/profiles/{user_id}/update", response_model=student_schemas.StudentProfileResponse)
+@router.put("/profiles/{user_id}/update", response_model=student_schemas.StudentProfileResponse)
 def update_student_profile(
     user_id: int,
     profile_data: student_schemas.StudentProfileBase,
@@ -112,5 +112,30 @@ def extract_and_add_skills_to_profile(
         ))
 
     return response_skills
+@router.delete("/profiles/{user_id}", status_code=status.HTTP_204_NO_CONTENT)
+def delete_student_profile(
+    user_id: int,
+    db: Session = Depends(get_db),
+    current_user: models.User = Depends(get_current_user)
+):
+    """
+    Delete a student's profile. Only the student themselves or an admin can delete.
+    """
+    # Allow delete if user is the owner or has admin role
+    is_student = any(role.role.name == "student" for role in current_user.roles)
+    is_admin = any(role.role.name == "admin" for role in current_user.roles)
+    if not (is_admin or (is_student and user_id == current_user.id)):
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Not authorized to delete this profile.")
+
+    student_profile = db.query(models.StudentProfile).filter(models.StudentProfile.user_id == user_id).first()
+    if not student_profile:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Student profile not found.")
+
+    # Optional: delete related student skills if cascade not configured
+    # db.query(models.StudentSkill).filter(models.StudentSkill.student_profile_id == student_profile.id).delete()
+
+    db.delete(student_profile)
+    db.commit()
+    return None
 
 # You can add endpoints for managing applications, learning paths here too
